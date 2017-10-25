@@ -4,15 +4,17 @@ using System.Text;
 
 namespace SqlServerDocumentator.DocumentedDatabaseObjects
 {
-    public class Table
+    public class DocumentedTable
     {
-        public Table(string serverName, string tableName)
+        public DocumentedTable(string serverName, string databaseName, string tableName)
         {
             this.ServerName = serverName;
             this.Name = tableName;
         }
 
         public string ServerName { get; }
+
+        public string DatabaseName { get; }
 
         public string Name { get; }
     }

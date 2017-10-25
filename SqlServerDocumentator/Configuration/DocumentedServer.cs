@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SqlServerDocumentator.Configuration
 {
-    public class Server
+    public class DocumentedServer
     {
         public string Name { get; set; }
 
