@@ -1,0 +1,19 @@
+﻿@model IEnumerable<SqlServerDocumentator.Configuration.DocumentedServer>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h2>View</h2>
+<div>
+    @foreach (var item in Model)
+    {
+        <div>
+            @Html.DisplayFor(modelItem => item.DisplayName) |
+            @Html.DisplayFor(modelItem => item.Name) |
+            @Html.ActionLink("Explore", "Index", "Database", new { serverName = item.Name })
+            <br />
+            @Html.DisplayFor(modelItem => item.Description)
+</div>
+    }
+    </div>
