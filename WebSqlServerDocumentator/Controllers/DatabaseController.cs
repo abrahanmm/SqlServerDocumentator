@@ -7,19 +7,25 @@ using SqlServerDocumentator;
 
 namespace WebSqlServerDocumentator.Controllers
 {
-    public class DatabaseController : Controller
-    {
-        private IDocumentator Documentator;
+	public class DatabaseController : Controller
+	{
+		private IDocumentator Documentator;
 
-        public DatabaseController()
-        {
-            this.Documentator = SqlServerDocumentator.Configuration.ConfigurationProvider.CreateInstance();
-        }
+		public DatabaseController()
+		{
+			this.Documentator = SqlServerDocumentator.Configuration.ConfigurationProvider.CreateInstance();
+		}
 
-        [Route("/server/{serverName}")]
-        public IActionResult Index(string serverName)
-        {
-            return View(this.Documentator.GetDatabases(serverName));
-        }
-    }
+		[Route("{serverName}/databases")]
+		public IActionResult Index(string serverName)
+		{
+			return View(this.Documentator.GetDatabases(serverName));
+		}
+
+		[Route("/{serverName}/{databaseName}/tables")]
+		public IActionResult Tables(string serverName, string databaseName)
+		{
+			return View(this.Documentator.GetTables(serverName, databaseName));
+		}
+	}
 }
