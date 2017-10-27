@@ -33,7 +33,7 @@
                 </td>
                 <td>
                     @Html.ActionLink("Explore Tables", "Tables", "Database", new { databaseName = item.Name, serverName = item.ServerName }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Explore Views", "Views", "Database", new { databaseName = item.Name, serverName = item.ServerName }) |
                     @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
                 </td>
             </tr>

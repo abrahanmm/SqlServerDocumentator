@@ -27,5 +27,11 @@ namespace WebSqlServerDocumentator.Controllers
 		{
 			return View(this.Documentator.GetTables(serverName, databaseName));
 		}
+
+		[Route("/{serverName}/{databaseName}/views")]
+		public IActionResult Views(string serverName, string databaseName)
+		{
+			return View(this.Documentator.GetViews(serverName, databaseName));
+		}
 	}
 }
