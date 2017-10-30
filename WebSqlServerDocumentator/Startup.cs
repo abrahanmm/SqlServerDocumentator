@@ -22,8 +22,13 @@ namespace WebSqlServerDocumentator
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
-            SqlServerDocumentator.Configuration.ConfigurationProvider.AddServer("localhost", "ordenador local", string.Empty);  
+            services.AddSqlServerDocumentator(
+                new(string serverName, string diplayServerName, string serverDescription)[] {
+                    ("", "", ""),
+                    ("", "", "")
+                })
+                .AddMvc();
+            SqlServerDocumentator.Configuration.ConfigurationProvider.StartConfiguration().AddServer("localhost", "ordenador local", string.Empty);  
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

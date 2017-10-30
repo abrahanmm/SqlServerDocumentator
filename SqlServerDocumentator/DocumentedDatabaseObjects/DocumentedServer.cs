@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SqlServerDocumentator.Configuration
+namespace SqlServerDocumentator.DocumentedDatabaseObjects
 {
     public class DocumentedServer
     {
