@@ -12,7 +12,7 @@ namespace WebSqlServerDocumentator
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             Configuration = configuration;
         }
@@ -23,12 +23,13 @@ namespace WebSqlServerDocumentator
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSqlServerDocumentator(
-                new(string serverName, string diplayServerName, string serverDescription)[] {
-                    ("", "", ""),
-                    ("", "", "")
-                })
-                .AddMvc();
-            SqlServerDocumentator.Configuration.ConfigurationProvider.StartConfiguration().AddServer("localhost", "ordenador local", string.Empty);  
+                new SqlServerDocumentator.Configuration.ConfigurationProvider()
+                    .AddServer("localhost", "localhost", "localhost")
+                    .AddServer("localhost", "ordenador local", "ordenador local")
+                    .UsePrefix("doc-")
+                    .BuildConfiguration()
+                )
+                .AddMvc(); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

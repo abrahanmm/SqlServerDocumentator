@@ -9,29 +9,29 @@ namespace WebSqlServerDocumentator.Controllers
 {
 	public class DatabaseController : Controller
 	{
-		private IDocumentator Documentator;
+		private IDocumentator _documentator;
 
-		public DatabaseController()
+		public DatabaseController(IDocumentator documentator)
 		{
-			this.Documentator = SqlServerDocumentator.Configuration.ConfigurationProvider.CreateInstance();
+			this._documentator = documentator;
 		}
 
 		[Route("{serverName}/databases")]
 		public IActionResult Index(string serverName)
 		{
-			return View(this.Documentator.GetDatabases(serverName));
+			return View(this._documentator.GetDatabases(serverName));
 		}
 
 		[Route("/{serverName}/{databaseName}/tables")]
 		public IActionResult Tables(string serverName, string databaseName)
 		{
-			return View(this.Documentator.GetTables(serverName, databaseName));
+			return View(this._documentator.GetTables(serverName, databaseName));
 		}
 
 		[Route("/{serverName}/{databaseName}/views")]
 		public IActionResult Views(string serverName, string databaseName)
 		{
-			return View(this.Documentator.GetViews(serverName, databaseName));
+			return View(this._documentator.GetViews(serverName, databaseName));
 		}
 	}
 }

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SqlServerDocumentator.DocumentedDatabaseObjects
+namespace SqlServerDocumentator.Configuration
 {
-    public class DocumentedServer
+    public class ConfigurationServer
     {
-        internal DocumentedServer(string serverName, string displayName, string description)
+        internal ConfigurationServer(string serverName, string displayName, string description)
         {
             this.Name = serverName;
             this.DisplayName = displayName;
@@ -18,6 +18,5 @@ namespace SqlServerDocumentator.DocumentedDatabaseObjects
         public string DisplayName { get; }
 
         public string Description { get; }
-
     }
 }

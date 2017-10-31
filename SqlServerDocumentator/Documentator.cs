@@ -9,16 +9,16 @@ namespace SqlServerDocumentator
 {
 	class Documentator : IDocumentator
 	{
-		List<DocumentedServer> servers = new List<DocumentedServer>();
+        IConfiguration _configuration;
 
-		public Documentator(DocumentedServer[] servers)
+		public Documentator(IConfiguration configuration)
 		{
-			this.servers.AddRange(servers);
+            _configuration = configuration;
 		}
 
 		public IEnumerable<DocumentedServer> GetServers()
 		{
-			return this.servers;
+            return this._configuration.DocumentedServers;
 		}
 
 		public IEnumerable<DocumentedDatabase> GetDatabases(string serverName)

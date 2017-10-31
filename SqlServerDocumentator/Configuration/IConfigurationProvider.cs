@@ -8,7 +8,7 @@ namespace SqlServerDocumentator.Configuration
     public interface IConfigurationProvider
     {
         IConfigurationProvider AddServer(string serverName, string displayName, string description);
-        IConfigurationProvider AddServer(DocumentedServer server);
-        IDocumentator CreateInstance();
+        IConfigurationProvider UsePrefix(string prefix);
+        IConfiguration BuildConfiguration();
     }
 }

@@ -11,17 +11,17 @@ namespace WebSqlServerDocumentator.Controllers
 {
     public class HomeController : Controller
     {
-        private IDocumentator Documentator;
+        private IDocumentator _documentator;
 
-        public HomeController()
+        public HomeController(IDocumentator documentator)
         {
-            this.Documentator = SqlServerDocumentator.Configuration.ConfigurationProvider.CreateInstance();
+            _documentator = documentator;
         }
 
         [Route("")]
         public IActionResult Index()
         {
-            return View(this.Documentator.GetServers());
+            return View(_documentator.GetServers());
         }
 
         public IActionResult Error()
