@@ -53,5 +53,15 @@ namespace SqlServerDocumentator
 					yield return new DocumentedView(serverName, databaseName, view.Name);
 			}
 		}
+
+		public IEnumerable<DocumentedStoredProcedure> GetStoredProcedures(string serverName, string databaseName)
+		{
+			Server server = new Server(serverName);
+			foreach (StoredProcedure procedure in server.Databases[databaseName].StoredProcedures)
+			{
+				if (!procedure.IsSystemObject)
+					yield return new DocumentedStoredProcedure(serverName, databaseName, procedure.Name);
+			}
+		}
 	}
 }

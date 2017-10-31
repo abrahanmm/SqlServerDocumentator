@@ -34,7 +34,7 @@
                 <td>
                     @Html.ActionLink("Explore Tables", "Tables", "Database", new { databaseName = item.Name, serverName = item.ServerName }) |
                     @Html.ActionLink("Explore Views", "Views", "Database", new { databaseName = item.Name, serverName = item.ServerName }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    @Html.ActionLink("Explore Stored Procedures", "StoredProcedures", "Database", new { databaseName = item.Name, serverName = item.ServerName })
                 </td>
             </tr>
         }

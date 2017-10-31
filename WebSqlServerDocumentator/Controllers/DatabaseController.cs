@@ -33,5 +33,11 @@ namespace WebSqlServerDocumentator.Controllers
 		{
 			return View(this.Documentator.GetViews(serverName, databaseName));
 		}
+
+		[Route("/{serverName}/{databaseName}/storedProcedures")]
+		public IActionResult StoredProcedures(string serverName, string databaseName)
+		{
+			return View(this.Documentator.GetStoredProcedures(serverName, databaseName));
+		}
 	}
 }

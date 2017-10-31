@@ -4,13 +4,13 @@ using System.Text;
 
 namespace SqlServerDocumentator.DocumentedDatabaseObjects
 {
-	public class DocumentedView
+	public class DocumentedStoredProcedure
 	{
-		public DocumentedView(string serverName, string databaseName, string viewName)
+		public DocumentedStoredProcedure(string serverName, string databaseName, string procedureName)
 		{
 			this.ServerName = serverName;
 			this.DatabaseName = databaseName;
-			this.Name = viewName;
+			this.Name = procedureName;
 		}
 
 		public string ServerName { get; }
