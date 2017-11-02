@@ -20,11 +20,8 @@ namespace SqlServerDocumentator.Configuration
         public IConfigurationProvider AddServer(string serverName, string displayName, string description)
         {
             _servers.Add(new ConfigurationServer
-            (
-                serverName,
-                displayName,
-                description
-            ));
+            ()
+            { Name = serverName, DisplayName = displayName, Description = description });
 
             return this;
         }

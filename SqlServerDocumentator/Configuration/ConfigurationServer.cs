@@ -6,17 +6,14 @@ namespace SqlServerDocumentator.Configuration
 {
     public class ConfigurationServer
     {
-        internal ConfigurationServer(string serverName, string displayName, string description)
+        public ConfigurationServer()
         {
-            this.Name = serverName;
-            this.DisplayName = displayName;
-            this.Description = description;
         }
 
-        public string Name { get; }
+        public string Name { get; set; }
 
-        public string DisplayName { get; }
+        public string DisplayName { get; set; }
 
-        public string Description { get; }
+        public string Description { get; set; }
     }
 }
