@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SqlServerDocumentator;
+using SqlServerDocumentator.Infraestructure;
 
 namespace WebSqlServerDocumentator
 {
@@ -20,17 +21,15 @@ namespace WebSqlServerDocumentator
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddSqlServerDocumentator(
+        public void ConfigureServices(IServiceCollection services) => services.AddSqlServerDocumentator(
                 new SqlServerDocumentator.Configuration.ConfigurationProvider()
                     .AddServer("localhost", "localhost", "localhost")
                     .AddServer("localhost", "ordenador local", "ordenador local")
                     .UsePrefix("doc-")
                     .BuildConfiguration()
                 )
-                .AddMvc(); 
-        }
+                .Configure<SqlDocumentatorConfiguration>(Configuration.GetSection(nameof(SqlDocumentatorConfiguration)))
+                .AddMvc();
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

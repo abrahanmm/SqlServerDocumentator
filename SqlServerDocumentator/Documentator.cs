@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using SqlServerDocumentator.DocumentedDatabaseObjects;
 using Microsoft.SqlServer.Management.Smo;
+using SqlServerDocumentator.Infraestructure;
+using Microsoft.Extensions.Options;
 
 namespace SqlServerDocumentator
 {
@@ -11,7 +13,7 @@ namespace SqlServerDocumentator
 	{
         IConfiguration _configuration;
 
-		public Documentator(IConfiguration configuration)
+		public Documentator(IConfiguration configuration, IOptionsSnapshot<SqlDocumentatorConfiguration> configurationTest)
 		{
             _configuration = configuration;
 		}
