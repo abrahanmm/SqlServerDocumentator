@@ -16,5 +16,6 @@ namespace SqlServerDocumentator
 
 		IEnumerable<DocumentedView> GetViews(string serverName, string databaseName);
 
-	}
+        IEnumerable<DocumentedStoredProcedure> GetStoredProcedures(string serverName, string databaseName);
+    }
 }

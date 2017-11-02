@@ -24,14 +24,15 @@ namespace SqlServerDocumentator
 		public IEnumerable<DocumentedDatabase> GetDatabases(string serverName)
 		{
 			Server server = new Server(serverName);
-			foreach (Database database in server.Databases)
-			{
-				yield return new DocumentedDatabase()
-				{
-					Name = database.Name,
-					ServerName = serverName
-				};
-			}
+            foreach (Database database in server.Databases)
+            {
+                if (!database.IsSystemObject)
+                    yield return new DocumentedDatabase()
+                    {
+                        Name = database.Name,
+                        ServerName = serverName
+                    };
+            }
 		}
 
 		public IEnumerable<DocumentedTable> GetTables(string serverName, string databaseName)
@@ -44,14 +45,24 @@ namespace SqlServerDocumentator
 			}
 		}
 
-		public IEnumerable<DocumentedView> GetViews(string serverName, string databaseName)
-		{
-			Server server = new Server(serverName);
-			foreach (View view in server.Databases[databaseName].Views)
-			{
-				if (!view.IsSystemObject)
-					yield return new DocumentedView(serverName, databaseName, view.Name);
-			}
-		}
-	}
+        public IEnumerable<DocumentedView> GetViews(string serverName, string databaseName)
+        {
+            Server server = new Server(serverName);
+            foreach (View view in server.Databases[databaseName].Views)
+            {
+                if (!view.IsSystemObject)
+                    yield return new DocumentedView(serverName, databaseName, view.Name);
+            }
+        }
+
+        public IEnumerable<DocumentedStoredProcedure> GetStoredProcedures(string serverName, string databaseName)
+        {
+            Server server = new Server(serverName);
+            foreach (StoredProcedure procedure in server.Databases[databaseName].StoredProcedures)
+            {
+                if (!procedure.IsSystemObject)
+                    yield return new DocumentedStoredProcedure(serverName, databaseName, procedure.Name);
+            }
+        }
+    }
 }
