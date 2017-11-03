@@ -36,6 +36,20 @@ namespace SqlServerDocumentator
 			}
 		}
 
+		public DocumentedDatabase SaveDatabase(DocumentedDatabase database)
+		{
+			Server server = new Server(database.ServerName);
+			if (!server.Databases[database.Name].ExtendedProperties.Contains("desctiption"))
+			{
+				server.Databases[database.Name].ExtendedProperties.Add(new ExtendedProperty(server.Databases[database.Name], "desctiption", database.Description));
+			}
+			else
+			{
+				server.Databases[database.Name].ExtendedProperties["desctiption"].Value = database.Description;
+			}
+			return database;
+		}
+
 		public IEnumerable<DocumentedTable> GetTables(string serverName, string databaseName)
 		{
 			Server server = new Server(serverName);

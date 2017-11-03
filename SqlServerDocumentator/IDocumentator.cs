@@ -11,6 +11,8 @@ namespace SqlServerDocumentator
 
 		IEnumerable<DocumentedDatabase> GetDatabases(string serverName);
 
+		DocumentedDatabase SaveDatabase(DocumentedDatabase database);
+
 		IEnumerable<DocumentedTable> GetTables(string serverName, string databaseName);
 
 		IEnumerable<DocumentedView> GetViews(string serverName, string databaseName);
