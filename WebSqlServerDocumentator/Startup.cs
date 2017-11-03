@@ -11,49 +11,44 @@ using SqlServerDocumentator.Infraestructure;
 
 namespace WebSqlServerDocumentator
 {
-    public class Startup
-    {
-        public Startup(Microsoft.Extensions.Configuration.IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+	public class Startup
+	{
+		public Startup(Microsoft.Extensions.Configuration.IConfiguration configuration)
+		{
+			Configuration = configuration;
+		}
 
-        public IConfiguration Configuration { get; }
+		public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services) => services.AddSqlServerDocumentator(
-                new SqlServerDocumentator.Configuration.ConfigurationProvider()
-                    .AddServer("localhost", "localhost", "localhost")
-                    .AddServer("localhost", "ordenador local", "ordenador local")
-                    .UsePrefix("doc-")
-                    .BuildConfiguration()
-                )
-                .Configure<SqlDocumentatorConfiguration>(Configuration.GetSection(nameof(SqlDocumentatorConfiguration)))
-                .AddMvc();
+		// This method gets called by the runtime. Use this method to add services to the container.
+		public void ConfigureServices(IServiceCollection services) =>
+			services
+				.AddSqlServerDocumentator(Configuration)
+				.AddMvc();
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		{
+			if (env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage();
+				app.UseBrowserLink();
+			}
+			else
+			{
+				app.UseExceptionHandler("/Home/Error");
+			}
 
-            app.UseStaticFiles();
+			app.UseStaticFiles();
 
-            app.UseMvc();
+			app.UseMvc();
 
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        name: "default",
-            //        template: "{controller=Home}/{action=Index}/{id?}");
-            //});
-        }
-    }
+			//app.UseMvc(routes =>
+			//{
+			//    routes.MapRoute(
+			//        name: "default",
+			//        template: "{controller=Home}/{action=Index}/{id?}");
+			//});
+		}
+	}
 }

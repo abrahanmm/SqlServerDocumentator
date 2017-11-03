@@ -1,5 +1,4 @@
-﻿using SqlServerDocumentator.Configuration;
-using SqlServerDocumentator.DocumentedDatabaseObjects;
+﻿using SqlServerDocumentator.DocumentedDatabaseObjects;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,6 +15,6 @@ namespace SqlServerDocumentator
 
 		IEnumerable<DocumentedView> GetViews(string serverName, string databaseName);
 
-        IEnumerable<DocumentedStoredProcedure> GetStoredProcedures(string serverName, string databaseName);
-    }
+		IEnumerable<DocumentedStoredProcedure> GetStoredProcedures(string serverName, string databaseName);
+	}
 }
