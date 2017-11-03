@@ -24,19 +24,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ServerName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.ActionLink("Explore Tables", "Tables", "Database", new { databaseName = item.Name, serverName = item.ServerName }) |
-                    @Html.ActionLink("Explore Views", "Views", "Database", new { databaseName = item.Name, serverName = item.ServerName }) |
-                    @Html.ActionLink("Explore Stored Procedures", "StoredProcedures", "Database", new { databaseName = item.Name, serverName = item.ServerName })
-                </td>
-            </tr>
+            @Html.Partial("database", item)
         }
     </tbody>
 </table>
