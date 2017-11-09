@@ -5,10 +5,27 @@
 }
 
 <h2>Servers</h2>
-
 <div class="servers">
     @foreach (var item in Model)
     {
-        <documented-server :name="'@item.Name'" :description="'@item.Description'" :display-name="'@item.DisplayName'" :url="'@Url.Action("Index", "Database", new { serverName = item.Name })'"></documented-server><hr />
+        <documented-server :name="'@item.Name'" :description="'@item.Description'" :display-name="'@item.DisplayName'" :url="'@Url.Action("Index", "Database", new { serverName = item.Name })'"></documented-server>
     }
 </div>
+@section scripts {
+    <script type="text/javascript">
+        Vue.component('documented-server', {
+            props: {
+                name: { type: String, default: '' },
+                displayName: { type: String, default: '' },
+                description: { type: String, default: '' },
+                url: { type: String, default: '' }
+            },
+            template: '<div>{{displayName}} - {{name}} || {{description}} || <a :href="url">Explore</a></div>'
+        });
+
+        new Vue(
+            {
+                el: '.servers'
+            });
+    </script>
+}
