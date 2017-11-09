@@ -4,16 +4,11 @@
     ViewData["Title"] = "Home Page";
 }
 
-<h2>View</h2>
-<div>
+<h2>Servers</h2>
+
+<div class="servers">
     @foreach (var item in Model)
     {
-        <div>
-            @Html.DisplayFor(modelItem => item.DisplayName) |
-            @Html.DisplayFor(modelItem => item.Name) |
-            @Html.ActionLink("Explore", "Index", "Database", new { serverName = item.Name })
-            <br />
-            @Html.DisplayFor(modelItem => item.Description)
-</div>
+        <documented-server :name="'@item.Name'" :description="'@item.Description'" :display-name="'@item.DisplayName'" :url="'@Url.Action("Index", "Database", new { serverName = item.Name })'"></documented-server><hr />
     }
-    </div>
+</div>
