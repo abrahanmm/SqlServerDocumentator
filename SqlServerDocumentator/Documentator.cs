@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Text;
 using SqlServerDocumentator.DocumentedDatabaseObjects;
@@ -52,32 +54,57 @@ namespace SqlServerDocumentator
 
 		public IEnumerable<DocumentedTable> GetTables(string serverName, string databaseName)
 		{
-			Server server = new Server(serverName);
-			foreach (Table table in server.Databases[databaseName].Tables)
-			{
-				if (!table.IsSystemObject)
-					yield return new DocumentedTable(serverName, databaseName, table.Name);
-			}
-		}
+            using (SqlConnection conn = new SqlConnection($"Server={serverName};Database={databaseName};Trusted_Connection=True;"))
+            {
+                using (SqlCommand command = new SqlCommand("SELECT name FROM sys.views", conn))
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            yield return new DocumentedTable(serverName, databaseName, reader.GetString(0));
+                        }
+                    }
+                }
+            }
+        }
 
 		public IEnumerable<DocumentedView> GetViews(string serverName, string databaseName)
 		{
-			Server server = new Server(serverName);
-			foreach (View view in server.Databases[databaseName].Views)
-			{
-				if (!view.IsSystemObject)
-					yield return new DocumentedView(serverName, databaseName, view.Name);
-			}
-		}
+            using (SqlConnection conn = new SqlConnection($"Server={serverName};Database={databaseName};Trusted_Connection=True;"))
+            {
+                using (SqlCommand command = new SqlCommand("SELECT name FROM sys.views", conn))
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            yield return new DocumentedView(serverName, databaseName, reader.GetString(0));
+                        }
+                    }
+                }
+            }
+        }
 
 		public IEnumerable<DocumentedStoredProcedure> GetStoredProcedures(string serverName, string databaseName)
 		{
-			Server server = new Server(serverName);
-			foreach (StoredProcedure procedure in server.Databases[databaseName].StoredProcedures)
-			{
-				if (!procedure.IsSystemObject)
-					yield return new DocumentedStoredProcedure(serverName, databaseName, procedure.Name);
-			}
-		}
-	}
+            using (SqlConnection conn = new SqlConnection($"Server={serverName};Database={databaseName};Trusted_Connection=True;"))
+            {
+                using (SqlCommand command = new SqlCommand("SELECT name FROM sys.procedures", conn))
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            yield return new DocumentedStoredProcedure(serverName, databaseName, reader.GetString(0));
+                        }
+                    }
+                }
+            }
+
+        }
+    }
 }

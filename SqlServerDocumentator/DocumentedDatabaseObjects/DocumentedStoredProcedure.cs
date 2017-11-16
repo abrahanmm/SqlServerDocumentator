@@ -4,19 +4,10 @@ using System.Text;
 
 namespace SqlServerDocumentator.DocumentedDatabaseObjects
 {
-    public class DocumentedStoredProcedure
+    public class DocumentedStoredProcedure : DocumentedSimpleObject
     {
-        public DocumentedStoredProcedure(string serverName, string databaseName, string procedureName)
+        public DocumentedStoredProcedure(string serverName, string databaseName, string procedureName) : base(serverName, databaseName, procedureName)
         {
-            this.ServerName = serverName;
-            this.DatabaseName = databaseName;
-            this.Name = procedureName;
         }
-
-        public string ServerName { get; }
-
-        public string DatabaseName { get; }
-
-        public string Name { get; }
     }
 }
