@@ -48,5 +48,13 @@ namespace WebSqlServerDocumentator.Controllers
 		{
 			return View(this._documentator.GetStoredProcedures(serverName, databaseName));
 		}
-	}
+
+        #region API
+        [Route("/api/servers/{serverName}/databases")]
+        public IActionResult GetAction(string serverName)
+        {
+            return Ok(this._documentator.GetDatabases(serverName));
+        }
+        #endregion
+    }
 }

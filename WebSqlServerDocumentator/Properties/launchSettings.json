@@ -2,6 +2,10 @@
   "iisSettings": {
     "windowsAuthentication": true,
     "anonymousAuthentication": false,
+    "iis": {
+      "applicationUrl": "http://localhost/WebSqlServerDocumentator",
+      "sslPort": 0
+    },
     "iisExpress": {
       "applicationUrl": "http://localhost:57878/",
       "sslPort": 0
@@ -14,6 +18,9 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    },
+    "dotnet": {
+      "commandName": "Executable"
     }
   }
 }
