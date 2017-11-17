@@ -4,10 +4,7 @@ using System.Text;
 
 namespace SqlServerDocumentator.DocumentedDatabaseObjects
 {
-    public class DocumentedView : DocumentedSimpleObject
-    {
-        public DocumentedView(string serverName, string databaseName, string procedureName) : base(serverName, databaseName, procedureName)
-        {
-        }
-    }
+	public class DocumentedView
+	{
+	}
 }

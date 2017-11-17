@@ -4,7 +4,10 @@ using System.Text;
 
 namespace SqlServerDocumentator.DocumentedDatabaseObjects
 {
-	public class DocumentedStoredProcedure
+	public enum TypeDocumentedObject
 	{
+		Table,
+		View,
+		StoredProcedure
 	}
 }

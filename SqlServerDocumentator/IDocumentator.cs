@@ -13,10 +13,10 @@ namespace SqlServerDocumentator
 
 		DocumentedDatabase SaveDatabase(DocumentedDatabase database);
 
-		IEnumerable<DocumentedTable> GetTables(string serverName, string databaseName);
+		IEnumerable<DocumentedSimpleObject> GetTables(string serverName, string databaseName);
 
-		IEnumerable<DocumentedView> GetViews(string serverName, string databaseName);
+		IEnumerable<DocumentedSimpleObject> GetViews(string serverName, string databaseName);
 
-		IEnumerable<DocumentedStoredProcedure> GetStoredProcedures(string serverName, string databaseName);
+		IEnumerable<DocumentedSimpleObject> GetStoredProcedures(string serverName, string databaseName);
 	}
 }

@@ -52,59 +52,38 @@ namespace SqlServerDocumentator
 			return database;
 		}
 
-		public IEnumerable<DocumentedTable> GetTables(string serverName, string databaseName)
+		public IEnumerable<DocumentedSimpleObject> GetTables(string serverName, string databaseName)
 		{
-            using (SqlConnection conn = new SqlConnection($"Server={serverName};Database={databaseName};Trusted_Connection=True;"))
-            {
-                using (SqlCommand command = new SqlCommand("SELECT name FROM sys.views", conn))
-                {
-                    conn.Open();
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            yield return new DocumentedTable(serverName, databaseName, reader.GetString(0));
-                        }
-                    }
-                }
-            }
-        }
+			return this.GetSimpleObject(serverName, databaseName,
+				"SELECT t.name, p.value FROM sys.tables t left join sys.extended_properties p on t.object_id = p.major_id and p.minor_id = 0 and p.name = 'description'", TypeDocumentedObject.Table);
+		}
 
-		public IEnumerable<DocumentedView> GetViews(string serverName, string databaseName)
+		public IEnumerable<DocumentedSimpleObject> GetViews(string serverName, string databaseName)
 		{
-            using (SqlConnection conn = new SqlConnection($"Server={serverName};Database={databaseName};Trusted_Connection=True;"))
-            {
-                using (SqlCommand command = new SqlCommand("SELECT name FROM sys.views", conn))
-                {
-                    conn.Open();
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            yield return new DocumentedView(serverName, databaseName, reader.GetString(0));
-                        }
-                    }
-                }
-            }
-        }
+			return this.GetSimpleObject(serverName, databaseName, "SELECT name FROM sys.views", TypeDocumentedObject.View);
+		}
 
-		public IEnumerable<DocumentedStoredProcedure> GetStoredProcedures(string serverName, string databaseName)
+		public IEnumerable<DocumentedSimpleObject> GetStoredProcedures(string serverName, string databaseName)
 		{
-            using (SqlConnection conn = new SqlConnection($"Server={serverName};Database={databaseName};Trusted_Connection=True;"))
-            {
-                using (SqlCommand command = new SqlCommand("SELECT name FROM sys.procedures", conn))
-                {
-                    conn.Open();
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            yield return new DocumentedStoredProcedure(serverName, databaseName, reader.GetString(0));
-                        }
-                    }
-                }
-            }
+			return this.GetSimpleObject(serverName, databaseName, "SELECT name FROM sys.procedures", TypeDocumentedObject.StoredProcedure);
+		}
 
-        }
-    }
+		private IEnumerable<DocumentedSimpleObject> GetSimpleObject(string serverName, string databaseName, string query, TypeDocumentedObject type)
+		{
+			using (SqlConnection conn = new SqlConnection($"Server={serverName};Database={databaseName};Trusted_Connection=True;"))
+			{
+				using (SqlCommand command = new SqlCommand(query, conn))
+				{
+					conn.Open();
+					using (SqlDataReader reader = command.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							yield return new DocumentedSimpleObject(serverName, databaseName, reader.GetString(0), reader.GetString(1), type);
+						}
+					}
+				}
+			}
+		}
+	}
 }
