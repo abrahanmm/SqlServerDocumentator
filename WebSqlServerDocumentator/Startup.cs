@@ -13,10 +13,19 @@ namespace WebSqlServerDocumentator
 {
 	public class Startup
 	{
-		public Startup(Microsoft.Extensions.Configuration.IConfiguration configuration)
+		//public Startup(Microsoft.Extensions.Configuration.IConfiguration configuration)
+		//{
+		//	Configuration = configuration;
+		//}
+
+		public Startup(IHostingEnvironment env)
 		{
-			Configuration = configuration;
+			var builder = new ConfigurationBuilder()
+				.SetBasePath(env.ContentRootPath)
+				.AddUserSecrets<Startup>();
+			Configuration = builder.Build();
 		}
+
 
 		public IConfiguration Configuration { get; }
 
