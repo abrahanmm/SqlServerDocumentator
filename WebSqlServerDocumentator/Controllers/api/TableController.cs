@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SqlServerDocumentator;
 using SqlServerDocumentator.DocumentedDatabaseObjects;
 
-namespace WebSqlServerDocumentator.Controllers
+namespace WebSqlServerDocumentator.Controllers.api
 {
     public class TableController: Controller
     {

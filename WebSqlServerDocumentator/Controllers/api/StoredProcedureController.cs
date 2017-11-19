@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebSqlServerDocumentator.Controllers
+namespace WebSqlServerDocumentator.Controllers.api
 {
     public class StoredProcedureController: Controller
     {
