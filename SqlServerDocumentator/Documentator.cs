@@ -53,20 +53,25 @@ namespace SqlServerDocumentator
 		}
 
 		public IEnumerable<DocumentedSimpleObject> GetTables(string serverName, string databaseName)
-		{
-			return this.GetSimpleObject(serverName, databaseName,
-				"SELECT t.name, p.value FROM sys.tables t left join sys.extended_properties p on t.object_id = p.major_id and p.minor_id = 0 and p.name = 'description'", TypeDocumentedObject.Table);
+		{                            
+            return this.GetSimpleObject(serverName, databaseName
+                , "SELECT t.name, p.value FROM sys.tables t left join sys.extended_properties p on t.object_id = p.major_id and p.minor_id = 0 and p.name = @description ORDER BY t.name"
+                , TypeDocumentedObject.Table);
 		}
 
 		public IEnumerable<DocumentedSimpleObject> GetViews(string serverName, string databaseName)
 		{
-			return this.GetSimpleObject(serverName, databaseName, "SELECT name FROM sys.views", TypeDocumentedObject.View);
-		}
+			return this.GetSimpleObject(serverName, databaseName
+                , "SELECT t.name, p.value FROM sys.views t left join sys.extended_properties p on t.object_id = p.major_id and p.minor_id = 0 and p.name = @description ORDER BY t.name"
+                , TypeDocumentedObject.View);
+        }
 
 		public IEnumerable<DocumentedSimpleObject> GetStoredProcedures(string serverName, string databaseName)
 		{
-			return this.GetSimpleObject(serverName, databaseName, "SELECT name FROM sys.procedures", TypeDocumentedObject.StoredProcedure);
-		}
+			return this.GetSimpleObject(serverName, databaseName
+                , "SELECT t.name, p.value FROM sys.procedures t left join sys.extended_properties p on t.object_id = p.major_id and p.minor_id = 0 and p.name = @description ORDER BY t.name"
+                , TypeDocumentedObject.StoredProcedure);
+        }
 
 		private IEnumerable<DocumentedSimpleObject> GetSimpleObject(string serverName, string databaseName, string query, TypeDocumentedObject type)
 		{
@@ -74,12 +79,16 @@ namespace SqlServerDocumentator
 			{
 				using (SqlCommand command = new SqlCommand(query, conn))
 				{
+                    command.Parameters.Add(new SqlParameter("@description", _configuration.Prefix));
 					conn.Open();
 					using (SqlDataReader reader = command.ExecuteReader())
 					{
 						while (reader.Read())
 						{
-							yield return new DocumentedSimpleObject(serverName, databaseName, reader.GetString(0), reader.GetString(1), type);
+                            yield return new DocumentedSimpleObject(serverName, databaseName
+                                ,reader.GetString(0)
+                                ,(reader.IsDBNull(1))? null: reader.GetString(1)
+                                ,type);
 						}
 					}
 				}
