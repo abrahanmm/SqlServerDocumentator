@@ -94,5 +94,25 @@ namespace SqlServerDocumentator
 				}
 			}
 		}
-	}
+
+        public DocumentedTable GetTable(string serverName, string databaseName, string tableName)
+        {
+            Server server = new Server(serverName);
+            string description = (server.Databases[databaseName].Tables[tableName].ExtendedProperties.Contains(_configuration.Prefix)) ?
+                server.Databases[databaseName].Tables[tableName].ExtendedProperties[_configuration.Prefix].Value.ToString() : string.Empty;
+            DocumentedTable documentedTable = new DocumentedTable(serverName, databaseName, tableName, description);
+            foreach (Column col in server.Databases[databaseName].Tables[tableName].Columns)
+            {
+                documentedTable.Columns.Add(
+                    new DocumentedColumn()
+                    {
+                        isPrimaryKey = col.InPrimaryKey,
+                        Name = col.Name,
+                        Description = (col.ExtendedProperties.Contains(_configuration.Prefix)) ? col.ExtendedProperties[_configuration.Prefix].Value.ToString() : string.Empty
+                    });
+            }
+            return documentedTable;
+        }
+
+    }
 }

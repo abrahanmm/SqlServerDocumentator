@@ -27,7 +27,7 @@ namespace WebSqlServerDocumentator.Controllers.api
         [Route("/api/servers/{serverName}/databases/{databaseName}/tables/{tableName}")]
         public IActionResult GetAction(string serverName, string databaseName, string tableName)
         {
-            return Ok(this._documentator.GetTables(serverName, databaseName));
+            return Ok(this._documentator.GetTable(serverName, databaseName, tableName));
         }
         #endregion
     }
