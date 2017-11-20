@@ -96,13 +96,13 @@ namespace SqlServerDocumentator
 			}
 		}
 
-		public DocumentedTable GetTable(string serverName, string databaseName, string tableName)
+		public DocumentedTable GetTable(string serverName, string databaseName, string schema, string tableName)
 		{
 			Server server = new Server(serverName);
-			string description = (server.Databases[databaseName].Tables[tableName].ExtendedProperties.Contains(_configuration.Prefix)) ?
-				server.Databases[databaseName].Tables[tableName].ExtendedProperties[_configuration.Prefix].Value.ToString() : string.Empty;
-			DocumentedTable documentedTable = new DocumentedTable(serverName, databaseName, tableName, description);
-			foreach (Column col in server.Databases[databaseName].Tables[tableName].Columns)
+			string description = (server.Databases[databaseName].Tables[tableName, schema].ExtendedProperties.Contains(_configuration.Prefix)) ?
+				server.Databases[databaseName].Tables[tableName, schema].ExtendedProperties[_configuration.Prefix].Value.ToString() : string.Empty;
+			DocumentedTable documentedTable = new DocumentedTable(serverName, databaseName, tableName, schema, description);
+			foreach (Column col in server.Databases[databaseName].Tables[tableName, schema].Columns)
 			{
 				documentedTable.Columns.Add(
 					new DocumentedColumn()

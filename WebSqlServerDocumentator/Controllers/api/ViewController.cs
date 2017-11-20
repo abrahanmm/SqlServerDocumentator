@@ -7,27 +7,27 @@ using System.Threading.Tasks;
 
 namespace WebSqlServerDocumentator.Controllers.api
 {
-    public class ViewController: Controller
-    {
-        private IDocumentator _documentator;
+	public class ViewController : Controller
+	{
+		private IDocumentator _documentator;
 
-        public ViewController(IDocumentator documentator)
-        {
-            this._documentator = documentator;
-        }
+		public ViewController(IDocumentator documentator)
+		{
+			this._documentator = documentator;
+		}
 
-        #region API
-        [Route("/api/servers/{serverName}/databases/{databaseName}/views")]
-        public IActionResult GetAction(string serverName, string databaseName)
-        {
-            return Ok(this._documentator.GetViews(serverName, databaseName));
-        }
+		#region API
+		[Route("/api/servers/{serverName}/databases/{databaseName}/views")]
+		public IActionResult GetAction(string serverName, string databaseName)
+		{
+			return Ok(this._documentator.GetViews(serverName, databaseName));
+		}
 
-        [Route("/api/servers/{serverName}/databases/{databaseName}/views/{viewName}")]
-        public IActionResult GetAction(string serverName, string databaseName, string viewName)
-        {
-            return Ok(this._documentator.GetViews(serverName, databaseName));
-        }
-        #endregion
-    }
+		[Route("/api/servers/{serverName}/databases/{databaseName}/views/{viewName}")]
+		public IActionResult GetAction(string serverName, string databaseName, string viewName)
+		{
+			return Ok(this._documentator.GetViews(serverName, databaseName));
+		}
+		#endregion
+	}
 }
