@@ -11,6 +11,7 @@ namespace SqlServerDocumentator.DocumentedDatabaseObjects
 			this.ServerName = serverName;
 			this.DatabaseName = databaseName;
 			this.Name = name;
+            this.Schema = schema;
 			this.Description = description;
 			this.Columns = new List<DocumentedColumn>();
 		}

@@ -102,12 +102,13 @@ namespace SqlServerDocumentator
 			string description = (server.Databases[databaseName].Tables[tableName, schema].ExtendedProperties.Contains(_configuration.Prefix)) ?
 				server.Databases[databaseName].Tables[tableName, schema].ExtendedProperties[_configuration.Prefix].Value.ToString() : string.Empty;
 			DocumentedTable documentedTable = new DocumentedTable(serverName, databaseName, tableName, schema, description);
-			foreach (Column col in server.Databases[databaseName].Tables[tableName, schema].Columns)
+            foreach (Column col in server.Databases[databaseName].Tables[tableName, schema].Columns)
 			{
 				documentedTable.Columns.Add(
 					new DocumentedColumn()
 					{
-						isPrimaryKey = col.InPrimaryKey,
+						inPrimaryKey = col.InPrimaryKey,
+                        isForeignKey = col.IsForeignKey,
 						Name = col.Name,
 						Description = (col.ExtendedProperties.Contains(_configuration.Prefix)) ? col.ExtendedProperties[_configuration.Prefix].Value.ToString() : string.Empty
 					});

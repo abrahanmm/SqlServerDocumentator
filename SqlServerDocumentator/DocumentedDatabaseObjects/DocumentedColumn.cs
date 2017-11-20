@@ -10,6 +10,8 @@ namespace SqlServerDocumentator.DocumentedDatabaseObjects
 
         public string Description { get; set; }
 
-        public bool isPrimaryKey { get; set; }
+        public bool inPrimaryKey { get; set; }
+
+        public bool isForeignKey { get; set; }
     }
 }
