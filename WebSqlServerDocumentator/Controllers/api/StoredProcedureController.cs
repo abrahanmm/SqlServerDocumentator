@@ -15,8 +15,7 @@ namespace WebSqlServerDocumentator.Controllers.api
         {
             this._documentator = documentator;
         }
-
-        #region API
+        
         [Route("/api/servers/{serverName}/databases/{databaseName}/storedProcedures")]
         public IActionResult GetAction(string serverName, string databaseName)
         {
@@ -26,8 +25,13 @@ namespace WebSqlServerDocumentator.Controllers.api
         [Route("/api/servers/{serverName}/databases/{databaseName}/storedProcedures/{storedProcedureName}")]
         public IActionResult GetAction(string serverName, string databaseName, string storedProcedureName)
         {
-            return Ok(this._documentator.GetTables(serverName, databaseName));
+            return Ok(this._documentator.GetStoredProcedure(serverName, databaseName, "dbo", storedProcedureName));
         }
-        #endregion
+
+        [Route("/api/servers/{serverName}/databases/{databaseName}/storedProcedures/{schemaName}.{storedProcedureName}")]
+        public IActionResult GetAction(string serverName, string databaseName, string schemaName, string storedProcedureName)
+        {
+            return Ok(this._documentator.GetStoredProcedure(serverName, databaseName, schemaName, storedProcedureName));
+        }
     }
 }

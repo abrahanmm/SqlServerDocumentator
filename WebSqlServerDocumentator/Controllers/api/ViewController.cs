@@ -16,18 +16,22 @@ namespace WebSqlServerDocumentator.Controllers.api
 			this._documentator = documentator;
 		}
 
-		#region API
 		[Route("/api/servers/{serverName}/databases/{databaseName}/views")]
 		public IActionResult GetAction(string serverName, string databaseName)
 		{
 			return Ok(this._documentator.GetViews(serverName, databaseName));
 		}
 
-		[Route("/api/servers/{serverName}/databases/{databaseName}/views/{viewName}")]
-		public IActionResult GetAction(string serverName, string databaseName, string viewName)
+        [Route("/api/servers/{serverName}/databases/{databaseName}/views/{viewName}")]
+        public IActionResult GetAction(string serverName, string databaseName, string viewName)
+        {
+            return Ok(this._documentator.GetView(serverName, databaseName, "dbo", viewName));
+        }
+
+        [Route("/api/servers/{serverName}/databases/{databaseName}/views/{schemaName}.{viewName}")]
+		public IActionResult GetAction(string serverName, string databaseName, string schemaName, string viewName)
 		{
-			return Ok(this._documentator.GetViews(serverName, databaseName));
+			return Ok(this._documentator.GetView(serverName, databaseName, schemaName, viewName));
 		}
-		#endregion
 	}
 }

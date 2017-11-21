@@ -13,7 +13,8 @@ namespace SqlServerDocumentator.DocumentedDatabaseObjects
 			this.Name = name;
             this.Schema = schema;
 			this.Description = description;
-			this.Columns = new List<DocumentedColumn>();
+			this.Columns = new List<DocumentedTableColumn>();
+            this.ForeignKeys = new List<DocumentedForeignKey>();
 		}
 
 		public string ServerName { get; }
@@ -40,6 +41,8 @@ namespace SqlServerDocumentator.DocumentedDatabaseObjects
 
 		public TypeDocumentedObject Type { get { return TypeDocumentedObject.Table; } }
 
-		public IList<DocumentedColumn> Columns { get; set; }
-	}
+		public IList<DocumentedTableColumn> Columns { get; set; }
+
+        public IList<DocumentedForeignKey> ForeignKeys { get; set; }
+    }
 }

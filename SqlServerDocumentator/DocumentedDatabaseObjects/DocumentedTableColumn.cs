@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SqlServerDocumentator.DocumentedDatabaseObjects
 {
-    public class DocumentedColumn
+    public class DocumentedTableColumn
     {
         public string Name { get; set; }
 
@@ -13,5 +13,7 @@ namespace SqlServerDocumentator.DocumentedDatabaseObjects
         public bool inPrimaryKey { get; set; }
 
         public bool isForeignKey { get; set; }
+
+        public string DataType { get; set; }
     }
 }

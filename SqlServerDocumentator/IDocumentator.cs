@@ -21,5 +21,8 @@ namespace SqlServerDocumentator
 
 		DocumentedTable GetTable(string serverName, string databaseName, string schema, string tableName);
 
-	}
+        DocumentedView GetView(string serverName, string databaseName, string schema, string viewName);
+
+        DocumentedStoredProcedure GetStoredProcedure(string serverName, string databaseName, string schema, string storedProcedureName);
+    }
 }
