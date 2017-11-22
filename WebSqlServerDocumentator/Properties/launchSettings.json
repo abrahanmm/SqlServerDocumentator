@@ -20,7 +20,7 @@
       }
     },
     "dotnet": {
-      "commandName": "Executable"
+      "commandName": "Project"
     }
   }
 }

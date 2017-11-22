@@ -27,19 +27,34 @@ namespace SqlServerDocumentator
 
 		public IEnumerable<DocumentedDatabase> GetDatabases(string serverName)
 		{
-			Server server = new Server(serverName);
+            Server server = this.GetSMOServer(serverName);
 			foreach (Database database in server.Databases)
 			{
 				if (!database.IsSystemObject)
 					yield return new DocumentedDatabase()
 					{
 						Name = database.Name,
-						ServerName = serverName
+						ServerName = serverName,
 					};
 			}
 		}
 
-		public IEnumerable<DocumentedSimpleObject> GetTables(string serverName, string databaseName)
+        public DocumentedDatabase GetDatabase(string serverName, string databaseName)
+        {
+            Database database = this.GetSMODatabase(serverName, databaseName);
+            if (!database.IsSystemObject)
+                return new DocumentedDatabase()
+                {
+                    Name = database.Name,
+                    ServerName = serverName,
+                    Description = (database.ExtendedProperties.Contains(this._configuration.Prefix)) ? database.ExtendedProperties[this._configuration.Prefix].Value.ToString() : null
+                };
+            else
+                return null;
+            
+        }
+
+        public IEnumerable<DocumentedSimpleObject> GetTables(string serverName, string databaseName)
 		{
 			return this.GetSimpleObject(serverName, databaseName
 				, "SELECT t.name, SCHEMA_NAME(t.schema_id) as [schema], p.value FROM sys.tables t left join sys.extended_properties p on t.object_id = p.major_id and p.minor_id = 0 and p.name = @description ORDER BY t.name"
@@ -85,11 +100,11 @@ namespace SqlServerDocumentator
 
         public DocumentedTable GetTable(string serverName, string databaseName, string schema, string tableName)
         {
-            Server server = new Server(serverName);
-            string description = (server.Databases[databaseName].Tables[tableName, schema].ExtendedProperties.Contains(_configuration.Prefix)) ?
-                server.Databases[databaseName].Tables[tableName, schema].ExtendedProperties[_configuration.Prefix].Value.ToString() : string.Empty;
+            Table table = this.GetSMOTable(serverName, databaseName, schema, tableName);
+            string description = (table.ExtendedProperties.Contains(_configuration.Prefix)) ?
+                table.ExtendedProperties[_configuration.Prefix].Value.ToString() : string.Empty;
             DocumentedTable documentedTable = new DocumentedTable(serverName, databaseName, tableName, schema, description);
-            foreach (Column col in server.Databases[databaseName].Tables[tableName, schema].Columns)
+            foreach (Column col in table.Columns)
             {
                 documentedTable.Columns.Add(
                     new DocumentedTableColumn()
@@ -102,7 +117,7 @@ namespace SqlServerDocumentator
                     });
             }
 
-            foreach (ForeignKey fk in server.Databases[databaseName].Tables[tableName, schema].ForeignKeys)
+            foreach (ForeignKey fk in table.ForeignKeys)
             {
                 DocumentedForeignKey key = new DocumentedForeignKey()
                 {
@@ -121,56 +136,151 @@ namespace SqlServerDocumentator
 
         public DocumentedView GetView(string serverName, string databaseName, string schema, string viewName)
         {
-            Server server = new Server(serverName);
-            string description = (server.Databases[databaseName].Views[viewName, schema].ExtendedProperties.Contains(_configuration.Prefix)) ?
-                server.Databases[databaseName].Views[viewName, schema].ExtendedProperties[_configuration.Prefix].Value.ToString() : string.Empty;
-            DocumentedView view = new DocumentedView(serverName, databaseName, viewName, schema, description);
+            View view = this.GetSMOView(serverName, databaseName, schema, viewName);
+            string description = (view.ExtendedProperties.Contains(_configuration.Prefix)) ?
+                view.ExtendedProperties[_configuration.Prefix].Value.ToString() : string.Empty;
+            DocumentedView documentedView = new DocumentedView(serverName, databaseName, viewName, schema, description);
 
-            foreach (Column col in server.Databases[databaseName].Views[viewName, schema].Columns)
+            foreach (Column col in view.Columns)
             {
-                view.Columns.Add(new DocumentedViewColumn()
+                documentedView.Columns.Add(new DocumentedViewColumn()
                 {
                     Name = col.Name,
                     DataType = col.DataType.Name
                 });
             }
 
-            return view;
+            return documentedView;
         }
 
         public DocumentedStoredProcedure GetStoredProcedure(string serverName, string databaseName, string schema, string storedProcedureName)
         {
-            Server server = new Server(serverName);
-            string description = (server.Databases[databaseName].StoredProcedures[storedProcedureName, schema].ExtendedProperties.Contains(_configuration.Prefix)) ?
-                server.Databases[databaseName].Views[storedProcedureName, schema].ExtendedProperties[_configuration.Prefix].Value.ToString() : string.Empty;
+            StoredProcedure procedure = this.GetSMOProcedure(serverName, databaseName, schema, storedProcedureName);
+            string description = (procedure.ExtendedProperties.Contains(_configuration.Prefix)) ?
+                procedure.ExtendedProperties[_configuration.Prefix].Value.ToString() : string.Empty;
             return new DocumentedStoredProcedure(serverName, databaseName, storedProcedureName, schema, description);
         }
 
         public DocumentedDatabase SaveDatabase(DocumentedDatabase database)
         {
-            Server server = new Server(database.ServerName);
-            if (!server.Databases[database.Name].ExtendedProperties.Contains("desctiption"))
+            Database smoDatabase = this.GetSMODatabase(database.ServerName, database.Name);
+            if (!smoDatabase.ExtendedProperties.Contains(this._configuration.Prefix))
             {
-                server.Databases[database.Name].ExtendedProperties.Add(new ExtendedProperty(server.Databases[database.Name], "desctiption", database.Description));
+                smoDatabase.ExtendedProperties.Add(new ExtendedProperty(smoDatabase, this._configuration.Prefix, database.Description));
             }
             else
             {
-                server.Databases[database.Name].ExtendedProperties["desctiption"].Value = database.Description;
+                smoDatabase.ExtendedProperties[this._configuration.Prefix].Value = database.Description;
             }
-            return database;
+            smoDatabase.Alter();
+            return this.GetDatabase(database.ServerName, database.Name);
         }
 
-        public DocumentedSimpleObject SaveTable(DocumentedSimpleObject table)
+        public DocumentedTable SaveTable(DocumentedTable table)
         {
-            return table;
+            Table smoTable = this.GetSMOTable(table.ServerName, table.DatabaseName, table.Schema, table.Name);
+            foreach (DocumentedTableColumn col in table.Columns)
+            {
+                if (!smoTable.Columns.Contains(col.Name))
+                    throw new KeyNotFoundException("Not exist Column with the name: " + col.Name);
+            }
+
+                if (!smoTable.ExtendedProperties.Contains(this._configuration.Prefix))
+            {
+                smoTable.ExtendedProperties.Add(new ExtendedProperty(smoTable, this._configuration.Prefix, table.Description));
+            }
+            else
+            {
+                smoTable.ExtendedProperties[this._configuration.Prefix].Value = table.Description;
+            }
+            foreach (DocumentedTableColumn col in table.Columns)
+            {
+                Column smoCol = smoTable.Columns[col.Name];
+                if (!smoCol.ExtendedProperties.Contains(this._configuration.Prefix))
+                {
+                    smoCol.ExtendedProperties.Add(new ExtendedProperty(smoCol, this._configuration.Prefix, col.Description));
+                }
+                else
+                {
+                    smoCol.ExtendedProperties[this._configuration.Prefix].Value = col.Description;
+                }
+            }
+            smoTable.Alter();
+            return this.GetTable(table.ServerName, table.DatabaseName, table.Schema, table.Name);
         }
 
-        private Server GetServer(string serverName)
+        public DocumentedView SaveView(DocumentedView view)
+        {
+            View smoView = this.GetSMOView(view.ServerName, view.DatabaseName, view.Schema, view.Name);
+            if (!smoView.ExtendedProperties.Contains(this._configuration.Prefix))
+            {
+                smoView.ExtendedProperties.Add(new ExtendedProperty(smoView, this._configuration.Prefix, view.Description));
+            }
+            else
+            {
+                smoView.ExtendedProperties[this._configuration.Prefix].Value = view.Description;
+            }
+            smoView.Alter();
+            return this.GetView(view.ServerName, view.DatabaseName, view.Schema, view.Name);
+        }
+
+        public DocumentedStoredProcedure SaveStoredProcedure(DocumentedStoredProcedure procedure)
+        {
+            StoredProcedure smoProcedure = this.GetSMOProcedure(procedure.ServerName, procedure.DatabaseName, procedure.Schema, procedure.Name);
+            if (!smoProcedure.ExtendedProperties.Contains(this._configuration.Prefix))
+            {
+                smoProcedure.ExtendedProperties.Add(new ExtendedProperty(smoProcedure, this._configuration.Prefix, procedure.Description));
+            }
+            else
+            {
+                smoProcedure.ExtendedProperties[this._configuration.Prefix].Value = procedure.Description;
+            }
+            smoProcedure.Alter();
+            return procedure;
+        }
+
+        private Server GetSMOServer(string serverName)
         {
             if (this._configuration.Servers.Any(x => x.Name.Equals(serverName)))
                 return new Server(serverName);
             else
                 throw new KeyNotFoundException("Not exist server with the name: " + serverName);
+        }
+
+        private Database GetSMODatabase(string serverName, string databaseName)
+        {
+            Server server = this.GetSMOServer(serverName);
+            if (server.Databases.Contains(databaseName))
+                return server.Databases[databaseName];
+            else
+                throw new KeyNotFoundException("Not exist database with the name: " + databaseName);
+        }
+
+        private Table GetSMOTable(string serverName, string databaseName, string schema, string tableName)
+        {
+            Database database = this.GetSMODatabase(serverName, databaseName);
+            if (database.Tables.Contains(tableName, schema))
+                return database.Tables[tableName, schema];
+            else
+                throw new KeyNotFoundException($"Not exist Table with the name: {schema}.{tableName}");
+        }
+
+        private View GetSMOView(string serverName, string databaseName, string schema, string viewName)
+        {
+            Database database = this.GetSMODatabase(serverName, databaseName);
+            if (database.Views.Contains(viewName, schema))
+                return database.Views[viewName, schema];
+            else
+                throw new KeyNotFoundException($"Not exist View with the name: {schema}.{viewName}");
+        }
+
+        private StoredProcedure GetSMOProcedure(string serverName, string databaseName, string schema, string procedureName)
+        {
+            Database database = this.GetSMODatabase(serverName, databaseName);
+            if (database.StoredProcedures.Contains(procedureName, schema))
+                return database.StoredProcedures[procedureName, schema];
+            else
+                throw new KeyNotFoundException($"Not exist Stored Procedure with the name: {schema}.{procedureName}");
         }
     }
 }
